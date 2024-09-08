@@ -5136,11 +5136,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/kiviamarakoon/Pathum/Simple Blog/Blog-Backend/Blog-Backend/Blog-Backend.csproj",
+      "projectUniqueName": "/home/kiviamarakoon/Pathum/ASP.NET_Blog/Blog-Backend/Blog-Backend/Blog-Backend.csproj",
       "projectName": "Blog-Backend",
-      "projectPath": "/home/kiviamarakoon/Pathum/Simple Blog/Blog-Backend/Blog-Backend/Blog-Backend.csproj",
+      "projectPath": "/home/kiviamarakoon/Pathum/ASP.NET_Blog/Blog-Backend/Blog-Backend/Blog-Backend.csproj",
       "packagesPath": "/home/kiviamarakoon/.nuget/packages/",
-      "outputPath": "/home/kiviamarakoon/Pathum/Simple Blog/Blog-Backend/Blog-Backend/obj/",
+      "outputPath": "/home/kiviamarakoon/Pathum/ASP.NET_Blog/Blog-Backend/Blog-Backend/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/kiviamarakoon/.nuget/NuGet/NuGet.Config"

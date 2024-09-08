@@ -23,6 +23,52 @@ namespace Blog_Backend.Controllers
             _context = context;
             _configuration = configuration;
         }
+        
+        // Get all readers
+        [HttpGet("getAll")]
+        [AllowAnonymous] // This allows the method to be accessed without authorization
+        public async Task<ActionResult<IEnumerable<ReaderDTO>>> GetAllReaders()
+        {
+            var readers = await _context.Readers
+                .Select(r => new ReaderDTO
+                {
+                    ReaderId = r.ReaderId,
+                    FirstName = r.FirstName,
+                    LastName = r.LastName,
+                    Email = r.Email,
+                    RegisteredAt = r.RegisteredAt
+                })
+                .ToListAsync();
+
+            return Ok(readers);
+        }
+        
+        
+        [HttpGet("getReader/{id}")]
+        [AllowAnonymous]
+        public async Task<ActionResult<ReaderDTO>> GetReaderById(int id)
+        {
+            var reader = await _context.Readers
+                .Where(r => r.ReaderId == id)
+                .Select(r => new ReaderDTO
+                {
+                    ReaderId = r.ReaderId,
+                    FirstName = r.FirstName,
+                    LastName = r.LastName,
+                    Email = r.Email,
+                    RegisteredAt = r.RegisteredAt
+                })
+                .FirstOrDefaultAsync();
+
+            if (reader == null)
+            {
+                return NotFound($"Reader with ID {id} not found.");
+            }
+
+            return Ok(reader);
+        }
+        
+        
 
         // Update reader details (identify by email from JWT)
         [HttpPut("update/{readerId}")]
@@ -70,7 +116,49 @@ namespace Blog_Backend.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-    }
+        
+        
+        // New delete method
+        [HttpPut("delete/{readerId}")]
+        public async Task<IActionResult> DeleteReader(int readerId)
+        {
+            // Get the email from the JWT token
+            var emailFromToken = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 
-    
+            if (emailFromToken == null)
+            {
+                return Unauthorized("Invalid token.");
+            }
+
+            // Find the reader in the database by ID
+            var reader = await _context.Readers.FindAsync(readerId);
+
+            if (reader == null)
+            {
+                return NotFound("Reader not found.");
+            }
+
+            // Ensure that the authenticated user is deleting their own account
+            if (!emailFromToken.Equals(reader.Email, StringComparison.OrdinalIgnoreCase))
+            {
+                return Forbid("You can only delete your own account.");
+            }
+
+            // Update the reader status to inactive (0)
+            reader.ReaderStatus = 0;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return Ok("Reader account deactivated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+        
+        
+        
+    }
 }

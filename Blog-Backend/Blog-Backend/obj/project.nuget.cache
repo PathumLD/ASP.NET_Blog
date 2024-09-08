@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "x4hYqBkGfZA=",
+  "dgSpecHash": "QTkKcic2ovM=",
   "success": true,
-  "projectFilePath": "/home/kiviamarakoon/Pathum/Simple Blog/Blog-Backend/Blog-Backend/Blog-Backend.csproj",
+  "projectFilePath": "/home/kiviamarakoon/Pathum/ASP.NET_Blog/Blog-Backend/Blog-Backend/Blog-Backend.csproj",
   "expectedPackageFiles": [
     "/home/kiviamarakoon/.nuget/packages/azure.core/1.38.0/azure.core.1.38.0.nupkg.sha512",
     "/home/kiviamarakoon/.nuget/packages/azure.identity/1.11.4/azure.identity.1.11.4.nupkg.sha512",

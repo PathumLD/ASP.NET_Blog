@@ -48,7 +48,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") + ";TrustServerCertificate=True;"));
 
 
-builder.Services.AddControllers()
+builder.Services.AddControllers(options =>
+    {
+        options.ReturnHttpNotAcceptable = true;
+    })
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
