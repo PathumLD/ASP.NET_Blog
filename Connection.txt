@@ -19,3 +19,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 
 
+Git Commands
+
+git init
+git status
+git add .
+git commit -m "Description of the changes"
+git push origin main
+
