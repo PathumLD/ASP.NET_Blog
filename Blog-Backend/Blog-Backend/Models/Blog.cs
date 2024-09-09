@@ -7,6 +7,7 @@ public class Blog
     public string? Category { get; set; }
     public string? Description { get; set; }
     public DateTime CreatedAt { get; set; }
+    public int BlogStatus { get; set; } = 1;
 
     // Foreign key
     public int ReaderId { get; set; }

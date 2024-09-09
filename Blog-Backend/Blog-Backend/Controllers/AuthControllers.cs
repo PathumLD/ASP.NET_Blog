@@ -121,9 +121,9 @@ namespace Blog_Backend.Controllers
         {
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, reader.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.NameIdentifier, reader.ReaderId.ToString()),
+                new Claim(JwtRegisteredClaimNames.Sub, reader.ReaderId.ToString()),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.Name, $"{reader.FirstName} {reader.LastName}"),
                 new Claim(ClaimTypes.Email, reader.Email)
             };
