@@ -1,25 +1,27 @@
 {
   "format": 1,
   "restore": {
-    "/home/kiviamarakoon/Pathum/ASP.NET_Blog/Blog-Backend/Blog-Backend/Blog-Backend.csproj": {}
+    "F:\\ASP.NET_Blog\\Blog-Backend\\Blog-Backend\\Blog-Backend.csproj": {}
   },
   "projects": {
-    "/home/kiviamarakoon/Pathum/ASP.NET_Blog/Blog-Backend/Blog-Backend/Blog-Backend.csproj": {
+    "F:\\ASP.NET_Blog\\Blog-Backend\\Blog-Backend\\Blog-Backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/kiviamarakoon/Pathum/ASP.NET_Blog/Blog-Backend/Blog-Backend/Blog-Backend.csproj",
+        "projectUniqueName": "F:\\ASP.NET_Blog\\Blog-Backend\\Blog-Backend\\Blog-Backend.csproj",
         "projectName": "Blog-Backend",
-        "projectPath": "/home/kiviamarakoon/Pathum/ASP.NET_Blog/Blog-Backend/Blog-Backend/Blog-Backend.csproj",
-        "packagesPath": "/home/kiviamarakoon/.nuget/packages/",
-        "outputPath": "/home/kiviamarakoon/Pathum/ASP.NET_Blog/Blog-Backend/Blog-Backend/obj/",
+        "projectPath": "F:\\ASP.NET_Blog\\Blog-Backend\\Blog-Backend\\Blog-Backend.csproj",
+        "packagesPath": "C:\\Users\\Roshelle\\.nuget\\packages\\",
+        "outputPath": "F:\\ASP.NET_Blog\\Blog-Backend\\Blog-Backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/kiviamarakoon/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\Roshelle\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -119,7 +121,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/home/kiviamarakoon/.dotnet/sdk/8.0.202/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.401/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

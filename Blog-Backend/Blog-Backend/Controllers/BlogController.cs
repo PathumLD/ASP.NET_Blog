@@ -128,7 +128,8 @@ namespace Blog_Backend.Controllers
         public async Task<ActionResult<BlogDTO>> GetBlog(int id)
         {
             var blog = await _context.Blogs
-                .Include<Blog, object>(b => b.Author)  // Include the related Reader
+                .Include<Blog, object>(b => b.Author)// Include the related Reader
+                .Where(b => b.BlogId == id)
                 .FirstOrDefaultAsync(b => b.BlogId == id);
 
             if (blog == null)
@@ -278,6 +279,40 @@ namespace Blog_Backend.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+
+        [HttpGet("myBlogs")]
+        public async Task<ActionResult<IEnumerable<BlogDTO>>> GetMyBlogs()
+        {
+            var readerIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (readerIdClaim == null || !int.TryParse(readerIdClaim.Value, out int readerId))
+            {
+                return Unauthorized("Unable to identify the user.");
+            }
+
+            var blogs = await _context.Blogs
+                .Where(b => b.ReaderId == readerId)
+                .Include(b => b.Author)
+                .ToListAsync();
+
+            if (blogs == null || !blogs.Any())
+            {
+                return NotFound("No blogs found for the current user.");
+            }
+
+            var blogDTOs = blogs.Select(blog => new BlogDTO
+            {
+                BlogId = blog.BlogId,
+                Title = blog.Title,
+                Category = blog.Category,
+                Description = blog.Description,
+                CreatedAt = blog.CreatedAt,
+                Author = $"{blog.Author.FirstName} {blog.Author.LastName}"
+            }).ToList();
+
+            return Ok(blogDTOs);
+        }
+
 
 
 

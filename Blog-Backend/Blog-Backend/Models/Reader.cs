@@ -1,3 +1,6 @@
+using System.Security.Cryptography;
+using System.Text;
+
 namespace Blog_Backend.Models;
 
 public class Reader
@@ -13,3 +16,4 @@ public class Reader
     // Navigation property
     public ICollection<Blog> Blogs { get; set; } = new List<Blog>();
 }
+

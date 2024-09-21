@@ -49,7 +49,7 @@ namespace Blog_Backend.Controllers
     
             if (existingReader != null)
             {
-                return Conflict("Email is already in use.");
+                return StatusCode(409, "Email is already in use.");
             }
 
             // Hash the password

@@ -1,6 +1,8 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Blog_Backend.DTO;
 using Blog_Backend.Models;
@@ -67,43 +69,112 @@ namespace Blog_Backend.Controllers
 
             return Ok(reader);
         }
-        
-        
+
+
 
         // Update reader details (identify by email from JWT)
-        [HttpPut("update/{readerId}")]
-        public async Task<IActionResult> UpdateReader([FromBody] UpdateReaderDTO updateReaderDTO)
+        //[HttpPut("update/{readerId}")]
+        //public async Task<IActionResult> UpdateReader([FromBody] UpdateReaderDTO updateReaderDTO)
+        //{
+        //    if (updateReaderDTO == null)
+        //    {
+        //        return BadRequest("Invalid reader data.");
+        //    }
+
+        //    // Get the email from the JWT token
+        //    var emailFromToken = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+        //    Console.WriteLine("Email: ",emailFromToken);
+
+        //    if (emailFromToken == null)
+        //    {
+        //        return Unauthorized("Invalid token.");
+        //    }
+
+        //    // Ensure that the authenticated user is updating their own details
+        //    if (!emailFromToken.Equals(updateReaderDTO.Email, System.StringComparison.OrdinalIgnoreCase))
+        //    {
+        //        return Forbid("You can only update your own details.");
+        //    }
+
+        //    // Find the reader in the database by email
+        //    var existingReader = await _context.Readers.FirstOrDefaultAsync(r => r.Email == emailFromToken);
+        //    if (existingReader == null)
+        //    {
+        //        return NotFound("Reader not found.");
+        //    }
+
+        //    // Update the reader details
+        //    existingReader.FirstName = updateReaderDTO.FirstName;
+        //    existingReader.LastName = updateReaderDTO.LastName;
+
+        //    try
+        //    {
+        //        _context.Readers.Update(existingReader);
+        //        await _context.SaveChangesAsync();
+        //        return Ok(existingReader);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, $"Internal server error: {ex.Message}");
+        //    }
+        //}
+
+
+        //Get Current reader
+        [HttpGet("getCurrentReader")]
+        public async Task<IActionResult> GetCurrentReader()
         {
-            if (updateReaderDTO == null)
-            {
-                return BadRequest("Invalid reader data.");
-            }
-
-            // Get the email from the JWT token
             var emailFromToken = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            Console.WriteLine("Email: ",emailFromToken);
-
             if (emailFromToken == null)
             {
                 return Unauthorized("Invalid token.");
             }
 
-            // Ensure that the authenticated user is updating their own details
-            if (!emailFromToken.Equals(updateReaderDTO.Email, System.StringComparison.OrdinalIgnoreCase))
-            {
-                return Forbid("You can only update your own details.");
-            }
-
-            // Find the reader in the database by email
-            var existingReader = await _context.Readers.FirstOrDefaultAsync(r => r.Email == emailFromToken);
-            if (existingReader == null)
+            var reader = await _context.Readers.FirstOrDefaultAsync(r => r.Email == emailFromToken);
+            if (reader == null)
             {
                 return NotFound("Reader not found.");
             }
 
-            // Update the reader details
-            existingReader.FirstName = updateReaderDTO.FirstName;
-            existingReader.LastName = updateReaderDTO.LastName;
+            var readerDTO = new ReaderDTO
+            {
+                ReaderId = reader.ReaderId,
+                FirstName = reader.FirstName,
+                LastName = reader.LastName,
+                Email = reader.Email,
+                RegisteredAt = reader.RegisteredAt
+            };
+
+            return Ok(readerDTO);
+        }
+
+
+        //Update Profile
+        [HttpPut("updateProfile")]
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateReaderDTO updateReaderDTO)
+        {
+            var emailFromToken = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            if (emailFromToken == null) return Unauthorized("Invalid token.");
+
+            var existingReader = await _context.Readers.FirstOrDefaultAsync(r => r.Email == emailFromToken);
+            if (existingReader == null) return NotFound("Reader not found.");
+
+            // Update only fields that are not null
+            if (!string.IsNullOrEmpty(updateReaderDTO.FirstName))
+            {
+                existingReader.FirstName = updateReaderDTO.FirstName;
+            }
+
+            if (!string.IsNullOrEmpty(updateReaderDTO.LastName))
+            {
+                existingReader.LastName = updateReaderDTO.LastName;
+            }
+
+            if (!string.IsNullOrEmpty(updateReaderDTO.Email) && !emailFromToken.Equals(updateReaderDTO.Email, StringComparison.OrdinalIgnoreCase))
+            {
+                // Here, you could also add logic for email validation or password checks
+                existingReader.Email = updateReaderDTO.Email;
+            }
 
             try
             {
@@ -116,8 +187,55 @@ namespace Blog_Backend.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-        
-        
+
+
+        //Email update
+        [HttpPut("updateEmail")]
+        public async Task<IActionResult> UpdateEmail([FromBody] UpdateEmailDTO updateEmailDTO)
+        {
+            var emailFromToken = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            if (emailFromToken == null) return Unauthorized("Invalid token.");
+
+            if (updateEmailDTO.CurrentEmail != emailFromToken)
+                return BadRequest("Current email does not match.");
+
+            if (updateEmailDTO.NewEmail != updateEmailDTO.ConfirmNewEmail)
+                return BadRequest("New email and confirmation email do not match.");
+
+            var reader = await _context.Readers.FirstOrDefaultAsync(r => r.Email == emailFromToken);
+            if (reader == null) return NotFound("Reader not found.");
+
+            if (!VerifyPassword(updateEmailDTO.CurrentPassword, reader.Password))
+                return Unauthorized("Incorrect password.");
+
+            reader.Email = updateEmailDTO.NewEmail;
+
+            try
+            {
+                _context.Readers.Update(reader);
+                await _context.SaveChangesAsync();
+                return Ok("Email updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        private bool VerifyPassword(string enteredPassword, string storedPasswordHash)
+        {
+            using (var sha256 = SHA256.Create())
+            {
+                // Hash the entered password and compare it to the stored hash
+                var enteredPasswordHash = Convert.ToBase64String(sha256.ComputeHash(Encoding.UTF8.GetBytes(enteredPassword)));
+                return enteredPasswordHash == storedPasswordHash;
+            }
+        }
+
+
+
+
+
         // New delete method
         [HttpPut("delete/{readerId}")]
         public async Task<IActionResult> DeleteReader(int readerId)

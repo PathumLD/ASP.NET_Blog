@@ -47,11 +47,19 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") + ";TrustServerCertificate=True;"));
 
+// Configure CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        builder => builder.WithOrigins("http://localhost:5173") // Your frontend URL
+                          .AllowAnyMethod()
+                          .AllowAnyHeader());
+});
 
 builder.Services.AddControllers(options =>
-    {
-        options.ReturnHttpNotAcceptable = true;
-    })
+{
+    options.ReturnHttpNotAcceptable = true;
+})
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
@@ -62,9 +70,6 @@ builder.Services.Configure<FormOptions>(options =>
 {
     options.MultipartBodyLengthLimit = long.MaxValue; // Set to appropriate limit
 });
-
-
-
 
 // Configure JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -82,13 +87,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-
-
-
-
 var app = builder.Build();
-
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -98,6 +97,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("AllowSpecificOrigin"); // Enable CORS
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -109,17 +109,17 @@ var summaries = new[]
 };
 
 app.MapGet("/weatherforecast", () =>
-    {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
+{
+    var forecast = Enumerable.Range(1, 5).Select(index =>
+            new WeatherForecast
+            (
+                DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+                Random.Shared.Next(-20, 55),
+                summaries[Random.Shared.Next(summaries.Length)]
+            ))
+        .ToArray();
+    return forecast;
+})
     .WithName("GetWeatherForecast")
     .WithOpenApi();
 
