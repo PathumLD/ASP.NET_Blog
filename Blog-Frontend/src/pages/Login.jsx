@@ -77,6 +77,10 @@ const Login = () => {
           >
             Login
           </button>
+
+          <div className="text-center">
+            <p className="mt-4">Don't have an account? <a href="/register" className="text-blue-500">Register</a></p>
+          </div>
         </form>
       </div>
     </div>
