@@ -250,6 +250,22 @@
   },
   {
     "ContainingType": "Blog_Backend.Controllers.ReaderController",
+    "Method": "UpdatePassword",
+    "RelativePath": "api/Reader/updatePassword",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "updatePasswordDTO",
+        "Type": "Blog_Backend.DTO.UpdatePasswordDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Blog_Backend.Controllers.ReaderController",
     "Method": "UpdateProfile",
     "RelativePath": "api/Reader/updateProfile",
     "HttpMethod": "PUT",

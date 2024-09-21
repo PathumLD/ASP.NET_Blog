@@ -72,54 +72,6 @@ namespace Blog_Backend.Controllers
 
 
 
-        // Update reader details (identify by email from JWT)
-        //[HttpPut("update/{readerId}")]
-        //public async Task<IActionResult> UpdateReader([FromBody] UpdateReaderDTO updateReaderDTO)
-        //{
-        //    if (updateReaderDTO == null)
-        //    {
-        //        return BadRequest("Invalid reader data.");
-        //    }
-
-        //    // Get the email from the JWT token
-        //    var emailFromToken = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-        //    Console.WriteLine("Email: ",emailFromToken);
-
-        //    if (emailFromToken == null)
-        //    {
-        //        return Unauthorized("Invalid token.");
-        //    }
-
-        //    // Ensure that the authenticated user is updating their own details
-        //    if (!emailFromToken.Equals(updateReaderDTO.Email, System.StringComparison.OrdinalIgnoreCase))
-        //    {
-        //        return Forbid("You can only update your own details.");
-        //    }
-
-        //    // Find the reader in the database by email
-        //    var existingReader = await _context.Readers.FirstOrDefaultAsync(r => r.Email == emailFromToken);
-        //    if (existingReader == null)
-        //    {
-        //        return NotFound("Reader not found.");
-        //    }
-
-        //    // Update the reader details
-        //    existingReader.FirstName = updateReaderDTO.FirstName;
-        //    existingReader.LastName = updateReaderDTO.LastName;
-
-        //    try
-        //    {
-        //        _context.Readers.Update(existingReader);
-        //        await _context.SaveChangesAsync();
-        //        return Ok(existingReader);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, $"Internal server error: {ex.Message}");
-        //    }
-        //}
-
-
         //Get Current reader
         [HttpGet("getCurrentReader")]
         public async Task<IActionResult> GetCurrentReader()
@@ -229,6 +181,46 @@ namespace Blog_Backend.Controllers
                 // Hash the entered password and compare it to the stored hash
                 var enteredPasswordHash = Convert.ToBase64String(sha256.ComputeHash(Encoding.UTF8.GetBytes(enteredPassword)));
                 return enteredPasswordHash == storedPasswordHash;
+            }
+        }
+
+
+        //Update Password
+        [HttpPut("updatePassword")]
+        public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordDTO updatePasswordDTO)
+        {
+            var emailFromToken = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            if (emailFromToken == null) return Unauthorized("Invalid token.");
+
+            var reader = await _context.Readers.FirstOrDefaultAsync(r => r.Email == emailFromToken);
+            if (reader == null) return NotFound("Reader not found.");
+
+            if (!VerifyPassword(updatePasswordDTO.CurrentPassword, reader.Password))
+                return Unauthorized("Incorrect current password.");
+
+            if (updatePasswordDTO.NewPassword != updatePasswordDTO.ConfirmNewPassword)
+                return BadRequest("New password and confirmation do not match.");
+
+            reader.Password = HashPassword(updatePasswordDTO.NewPassword);
+
+            try
+            {
+                _context.Readers.Update(reader);
+                await _context.SaveChangesAsync();
+                return Ok("Password updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        private string HashPassword(string password)
+        {
+            using (var sha256 = SHA256.Create())
+            {
+                var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                return Convert.ToBase64String(hashedBytes);
             }
         }
 
