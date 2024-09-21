@@ -45,22 +45,21 @@ const Dashboard = () => {
         <div className="text-center text-red-500">{error}</div>
       ) : (
         <>
-          {/* Blog Count */}
-          {/* <div className="text-center text-xl font-semibold mb-6">
-            You have written {blogs.length} {blogs.length === 1 ? 'blog' : 'blogs'}.
-          </div> */}
-
           {/* Blog Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {blogs.map((blog) => (
               <Link to={`/blog/${blog.blogId}`} key={blog.blogId}>
                 <div className="bg-white shadow-lg rounded-lg p-4 transition hover:shadow-xl cursor-pointer">
                   <h2 className="text-xl font-bold mb-2">{blog.title}</h2>
                   <p className="text-gray-700 mb-2">Category: {blog.category}</p>
-                  <p className="text-gray-500 mb-4">{blog.description}</p>
+                  <div
+                    className="text-gray-700 mb-6 line-clamp-1"
+                    dangerouslySetInnerHTML={{ __html: blog.description }}
+                  ></div>
                   <p className="text-sm text-gray-400">
                     Posted on: {new Date(blog.createdAt).toLocaleDateString()}
                   </p>
+                  <p className='text-sm text-gray-400'>Author: {blog.author}</p>
                 </div>
               </Link>
             ))}

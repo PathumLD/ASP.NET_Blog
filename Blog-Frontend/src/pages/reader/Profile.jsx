@@ -110,7 +110,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 bg-white rounded-lg shadow-md mt-12 py-8">
       <h1 className="text-3xl font-bold text-center mb-6">Profile</h1>
       {success && <div className="text-green-500 mb-4">{success}</div>}
       {error && <div className="text-red-500 mb-4">{error}</div>}

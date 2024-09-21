@@ -11,7 +11,7 @@ const MyBlogs = () => {
     const fetchBlogs = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('https://localhost:7140/api/Blog/myBlogs', { // Make sure this API returns the user's blogs
+        const response = await axios.get('https://localhost:7140/api/Blog/myBlogs', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setBlogs(response.data);
@@ -32,18 +32,26 @@ const MyBlogs = () => {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-center mb-6">My Blogs</h1>
 
+
       {/* Blog Count */}
-          <div className="text-center text-xl font-semibold mb-6">
-            You have written {blogs.length} {blogs.length === 1 ? 'blog' : 'blogs'}.
-          </div>
+      <div className="flex justify-center gap-4 text-xl font-semibold mb-6">
+        <div>You have written <span className='text-blue-700'>{blogs.length} {blogs.length === 1 ? 'blog' : 'blogs'}.</span></div>
+        <div className="text-center mb-6">
+        <Link to="/blogs/create" className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
+          New Blog
+        </Link>
+      </div>
+      </div>
 
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {blogs.map((blog) => (
           <div key={blog.blogId} className="bg-white shadow-lg rounded-lg p-4 transition hover:shadow-xl">
             <h2 className="text-xl font-bold mb-2">{blog.title}</h2>
             <p className="text-gray-700 mb-2">Category: {blog.category}</p>
-            <p className="text-gray-500 mb-4">{blog.description.substring(0, 100)}...</p>
+            <div
+              className="text-gray-700 mb-6 line-clamp-1"
+              dangerouslySetInnerHTML={{ __html: blog.description }}
+            ></div>
             <p className="text-sm text-gray-400">Posted on: {new Date(blog.createdAt).toLocaleDateString()}</p>
 
             <div className="flex justify-end mt-4">

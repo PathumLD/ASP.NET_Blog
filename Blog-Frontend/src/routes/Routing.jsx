@@ -9,6 +9,7 @@ import MyBlogs from '../pages/reader/MyBlogs';
 import UpdateBlog from '../pages/blog/UpdateBlog';
 import Profile from '../pages/reader/Profile';
 import Settings from '../pages/reader/Settings';
+import CreateBlog from '../pages/blog/CreateBlog';
 
 // Layout component to apply the navbar and authentication check
 const Layout = () => {
@@ -52,6 +53,7 @@ const Routing = () => {
         <Route path="/profile" element={<Profile />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/blogs" element={<MyBlogs />} />
+        <Route path="/blogs/create" element={<CreateBlog />} />
         <Route path="/blog/:blogId" element={<BlogDetails />} />
         <Route path='/blog/updateBlog/:blogId' element= {<UpdateBlog />} />
       </Route>

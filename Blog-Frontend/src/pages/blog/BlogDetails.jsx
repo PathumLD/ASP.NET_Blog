@@ -1,5 +1,3 @@
-// src/pages/BlogDetail.js
-
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -43,7 +41,7 @@ const BlogDetail = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="bg-white rounded-lg shadow-md mt-12 container mx-auto px-4 py-8">
       <h1 className="text-4xl text-center font-bold mb-6">{blog.title}</h1>
       <div className="text-gray-500 mb-4">
         <p>Category: {blog.category}</p>
@@ -51,11 +49,12 @@ const BlogDetail = () => {
         {/* Display author's name */}
         <p>Author: {blog.author}</p>
       </div>
-      <div className="text-gray-700 mb-6">{blog.description}</div>
-      {/* <div className="bg-white p-6 rounded-lg shadow-md">
-        
-        <p className="text-lg">{blog.content}</p>
-      </div> */}
+
+      {/* Render blog description with HTML */}
+      <div
+        className="text-gray-700 mb-6"
+        dangerouslySetInnerHTML={{ __html: blog.description }}
+      ></div>
     </div>
   );
 };
