@@ -5,5 +5,6 @@ public class BlogDTO
     public string Category { get; set; }
     public string Description { get; set; }
     public DateTime CreatedAt { get; set; }
+    public int BlogStatus { get; set; }
     public string Author { get; set; }  // Author's name (first and last name combined)
 }

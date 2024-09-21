@@ -6,7 +6,7 @@ import 'react-quill/dist/quill.snow.css'; // Import styles for the editor
 
 const UpdateBlog = () => {
   const { blogId } = useParams();
-  const [blog, setBlog] = useState({ title: '', category: '', description: '' });
+  const [blog, setBlog] = useState({ title: '', category: '', description: '', blogStatus: 1 }); // Added blogStatus to state
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
@@ -20,7 +20,7 @@ const UpdateBlog = () => {
         const response = await axios.get(`https://localhost:7140/api/Blog/viewBlog/${blogId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setBlog(response.data);
+        setBlog(response.data); // This includes blogStatus
       } catch (err) {
         setError('Failed to load blog details.', err);
       } finally {
@@ -74,6 +74,24 @@ const UpdateBlog = () => {
     }
   };
 
+  const handleRepost = async () => {
+    setError(null);
+    setSuccess(false);
+
+    try {
+      const token = localStorage.getItem('token');
+      // Update blogStatus to 1
+      await axios.put(`https://localhost:7140/api/Blog/updateBlog/${blogId}`, { ...blog, blogStatus: 1 }, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setSuccess(true);
+      alert("Blog reposted successfully!");
+      navigate('/blogs');
+    } catch (err) {
+      setError('Failed to repost the blog.', err);
+    }
+  };
+
   const openModal = (e) => {
     e.preventDefault(); // Prevent form submission
     setIsModalOpen(true);
@@ -89,7 +107,7 @@ const UpdateBlog = () => {
       <h1 className="text-3xl font-bold text-center mb-6">Update Blog</h1>
       {success && <div className="text-green-500">Blog updated successfully!</div>}
       <form onSubmit={handleSubmit}>
-      {error && <div className="text-red-500 mt-4">{error}</div>}
+        {error && <div className="text-red-500 mt-4">{error}</div>}
         <div className="mb-4">
           <label className="block text-gray-700">Title</label>
           <input
@@ -122,10 +140,16 @@ const UpdateBlog = () => {
             required
           />
         </div>
-        <div className='flex justify-between'>
-          <button onClick={openModal} className="bg-red-500 text-white py-2 px-4 mt-16 rounded hover:bg-red-600">
-            Delete Blog
-          </button>
+        <div className="flex justify-between">
+          {blog.blogStatus === 0 ? (
+            <button onClick={openModal} className="bg-red-500 text-white py-2 px-4 mt-16 rounded hover:bg-red-600">
+              Delete Blog
+            </button>
+          ) : (
+            <button onClick={handleRepost} className="bg-green-500 text-white py-2 px-4 mt-16 rounded hover:bg-green-600">
+              Repost Blog
+            </button>
+          )}
           <button type="submit" className="bg-blue-500 text-white py-2 px-4 mt-16 rounded hover:bg-blue-600">
             Update Blog
           </button>

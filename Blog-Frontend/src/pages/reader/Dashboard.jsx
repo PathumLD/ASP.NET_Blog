@@ -23,7 +23,15 @@ const Dashboard = () => {
               Authorization: `Bearer ${token}`,
             },
           });
-          setBlogs(response.data);
+          
+          // Log the entire response to check the data format
+          console.log("API Response: ", response.data);
+
+          // Ensure blogStatus exists in the response and filter blogs with BlogStatus == 1
+          const filteredBlogs = response.data.filter(blog => blog.blogStatus === 1);
+
+          console.log("Filtered Blogs: ", filteredBlogs);  // Log filtered blogs
+          setBlogs(filteredBlogs);
         }
       } catch (err) {
         setError('Failed to load blogs.', err);

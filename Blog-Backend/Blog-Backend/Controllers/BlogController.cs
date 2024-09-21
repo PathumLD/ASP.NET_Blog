@@ -115,6 +115,7 @@ namespace Blog_Backend.Controllers
                 Category = blog.Category,
                 Description = blog.Description,
                 CreatedAt = blog.CreatedAt,
+                BlogStatus = blog.BlogStatus,
                 Author = $"{blog.Author.FirstName} {blog.Author.LastName}"  // Combine first and last name for the author
             }).ToList();
 
@@ -264,7 +265,7 @@ namespace Blog_Backend.Controllers
             }
 
             // Update the blog status to "deleted" (0)
-            blog.BlogStatus = 0; // Assuming blogStatus is 1 for active and 0 for deleted
+            blog.BlogStatus = 1; // Assuming blogStatus is 1 for active and 0 for deleted
 
             try
             {
@@ -307,6 +308,7 @@ namespace Blog_Backend.Controllers
                 Category = blog.Category,
                 Description = blog.Description,
                 CreatedAt = blog.CreatedAt,
+                BlogStatus = blog.BlogStatus,
                 Author = $"{blog.Author.FirstName} {blog.Author.LastName}"
             }).ToList();
 
