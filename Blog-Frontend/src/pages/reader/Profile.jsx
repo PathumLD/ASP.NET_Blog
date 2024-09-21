@@ -17,10 +17,10 @@ const Profile = () => {
   });
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch the reader's profile data on component mount
     const fetchProfile = async () => {
       try {
         const token = localStorage.getItem('token');
@@ -61,17 +61,15 @@ const Profile = () => {
     setError(null);
     setSuccess(null);
 
-    // Collect only changed fields
     const updateData = {};
     if (profile.firstName) updateData.firstName = profile.firstName;
     if (profile.lastName) updateData.lastName = profile.lastName;
 
     try {
       const token = localStorage.getItem('token');
-      // API call to update first name and last name
       await axios.put(
         'https://localhost:7140/api/Reader/updateProfile',
-        updateData,  // Send only modified fields
+        updateData,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -94,7 +92,6 @@ const Profile = () => {
 
     try {
       const token = localStorage.getItem('token');
-      // API call to update email
       await axios.put(
         'https://localhost:7140/api/Reader/updateEmail',
         emailUpdate,
@@ -103,9 +100,10 @@ const Profile = () => {
         }
       );
       setSuccess('Email updated successfully!');
-      localStorage.removeItem('token')
-      navigate('/login')
-      setShowEmailModal(false);
+      
+      // Show confirmation modal
+      setShowConfirmModal(true);
+      setShowEmailModal(false); // Close email update modal
     } catch (err) {
       setError('Failed to update email.', err);
     }
@@ -228,6 +226,27 @@ const Profile = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Confirmation Modal */}
+      {showConfirmModal && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+            <h2 className="text-2xl font-bold mb-4">Email Changed</h2>
+            <p>Your email has been changed. You are being redirected to the login page.</p>
+            <div className="flex justify-center mt-4">
+              <button
+                className="bg-blue-500 text-white py-2 px-4 rounded"
+                onClick={() => {
+                  localStorage.removeItem('token');
+                  navigate('/login');
+                }}
+              >
+                OK
+              </button>
+            </div>
           </div>
         </div>
       )}
