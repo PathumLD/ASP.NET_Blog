@@ -100,21 +100,54 @@ namespace Blog_Backend.Controllers
 
 
 
-        // Get All Blogs
         [HttpGet("allBlogs")]
-        [AllowAnonymous] // No need for authorization to view all blogs
-        public async Task<ActionResult<IEnumerable<BlogDTO>>> GetAllBlogs()
+        [AllowAnonymous]
+        public async Task<ActionResult<IEnumerable<BlogDTO>>> GetAllBlogs(
+    string? category = null,
+    string? authorName = null,
+    string? searchKeyword = null)
         {
-            var blogs = await _context.Blogs
-                .Include(b => b.Author)  // Include the related Reader to get the author's details
-                .ToListAsync();
+            var blogsQuery = _context.Blogs.Include(b => b.Author).AsQueryable();
+
+            // Filter by category
+            if (!string.IsNullOrEmpty(category))
+            {
+                blogsQuery = blogsQuery.Where(b => b.Category.Equals(category, StringComparison.OrdinalIgnoreCase));
+            }
+
+            // Filter by author
+            if (!string.IsNullOrEmpty(authorName))
+            {
+                var authorParts = authorName.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+                if (authorParts.Length == 1) // Only First Name or Last Name provided
+                {
+                    string authorPart = authorParts[0];
+                    blogsQuery = blogsQuery.Where(b => b.Author.FirstName.Contains(authorPart, StringComparison.OrdinalIgnoreCase) ||
+                                                       b.Author.LastName.Contains(authorPart, StringComparison.OrdinalIgnoreCase));
+                }
+                else if (authorParts.Length >= 2) // Both First Name and Last Name provided
+                {
+                    string firstName = authorParts[0];
+                    string lastName = authorParts[1];
+                    blogsQuery = blogsQuery.Where(b => b.Author.FirstName.Equals(firstName, StringComparison.OrdinalIgnoreCase) &&
+                                                       b.Author.LastName.Equals(lastName, StringComparison.OrdinalIgnoreCase));
+                }
+            }
+
+            // Search by keyword in title or description
+            if (!string.IsNullOrEmpty(searchKeyword))
+            {
+                blogsQuery = blogsQuery.Where(b => b.Title.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) ||
+                                                   b.Description.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase));
+            }
+
+            var blogs = await blogsQuery.ToListAsync();
 
             if (blogs == null || !blogs.Any())
             {
                 return NotFound("No blogs found.");
             }
 
-            // Map blogs to BlogDTOs, including the author's name and image URL
             var blogDTOs = blogs.Select(blog => new BlogDTO
             {
                 BlogId = blog.BlogId,
@@ -123,12 +156,14 @@ namespace Blog_Backend.Controllers
                 Description = blog.Description,
                 CreatedAt = blog.CreatedAt,
                 BlogStatus = blog.BlogStatus,
-                Author = $"{blog.Author.FirstName} {blog.Author.LastName}",  // Combine first and last name for the author
-                ImageUrl = blog.ImageUrl  // Add image URL to the response
+                Author = $"{blog.Author.FirstName} {blog.Author.LastName}",
+                ImageUrl = blog.ImageUrl
             }).ToList();
 
             return Ok(blogDTOs);
         }
+
+
 
 
         // View a specific blog

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "NarT+nyLON0IEnV160nBym3d9C4mumsqxhq99LvbR3o=",
+  "Hash": "+d4bGa5w6oGjtGiABSQo3aQb6ZdHpD38U8jCXOS7Mxc=",
   "Source": "Blog-Backend",
   "BasePath": "_content/Blog-Backend",
   "Mode": "Default",
@@ -16,6 +16,25 @@
     }
   ],
   "Assets": [
+    {
+      "Identity": "F:\\ASP.NET_Blog\\Blog-Backend\\Blog-Backend\\wwwroot\\images\\0ca9dc8c-1e07-4c28-9827-ece572f88b13.jpg",
+      "SourceId": "Blog-Backend",
+      "SourceType": "Discovered",
+      "ContentRoot": "F:\\ASP.NET_Blog\\Blog-Backend\\Blog-Backend\\wwwroot\\",
+      "BasePath": "_content/Blog-Backend",
+      "RelativePath": "images/0ca9dc8c-1e07-4c28-9827-ece572f88b13.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\0ca9dc8c-1e07-4c28-9827-ece572f88b13.jpg"
+    },
     {
       "Identity": "F:\\ASP.NET_Blog\\Blog-Backend\\Blog-Backend\\wwwroot\\images\\b0b8eca7-e9ef-4810-b41a-bdc392c0ee80.png",
       "SourceId": "Blog-Backend",
@@ -36,6 +55,25 @@
       "OriginalItemSpec": "wwwroot\\images\\b0b8eca7-e9ef-4810-b41a-bdc392c0ee80.png"
     },
     {
+      "Identity": "F:\\ASP.NET_Blog\\Blog-Backend\\Blog-Backend\\wwwroot\\images\\d376905a-37cd-42eb-bf36-1e2a44de072e.webp",
+      "SourceId": "Blog-Backend",
+      "SourceType": "Discovered",
+      "ContentRoot": "F:\\ASP.NET_Blog\\Blog-Backend\\Blog-Backend\\wwwroot\\",
+      "BasePath": "_content/Blog-Backend",
+      "RelativePath": "images/d376905a-37cd-42eb-bf36-1e2a44de072e.webp",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\d376905a-37cd-42eb-bf36-1e2a44de072e.webp"
+    },
+    {
       "Identity": "F:\\ASP.NET_Blog\\Blog-Backend\\Blog-Backend\\wwwroot\\images\\ed79b542-4d1d-4ee8-bb4f-b31a510a3f72.png",
       "SourceId": "Blog-Backend",
       "SourceType": "Discovered",
@@ -53,6 +91,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\ed79b542-4d1d-4ee8-bb4f-b31a510a3f72.png"
+    },
+    {
+      "Identity": "F:\\ASP.NET_Blog\\Blog-Backend\\Blog-Backend\\wwwroot\\images\\eea9808c-cc0c-4ee0-a3b7-a8efb5c635c1.jpg",
+      "SourceId": "Blog-Backend",
+      "SourceType": "Discovered",
+      "ContentRoot": "F:\\ASP.NET_Blog\\Blog-Backend\\Blog-Backend\\wwwroot\\",
+      "BasePath": "_content/Blog-Backend",
+      "RelativePath": "images/eea9808c-cc0c-4ee0-a3b7-a8efb5c635c1.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\eea9808c-cc0c-4ee0-a3b7-a8efb5c635c1.jpg"
     },
     {
       "Identity": "F:\\ASP.NET_Blog\\Blog-Backend\\Blog-Backend\\wwwroot\\images\\Image2 (1).png",

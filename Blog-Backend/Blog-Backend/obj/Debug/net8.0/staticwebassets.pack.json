@@ -1,6 +1,10 @@
 {
   "Files": [
     {
+      "Id": "F:\\ASP.NET_Blog\\Blog-Backend\\Blog-Backend\\wwwroot\\images\\0ca9dc8c-1e07-4c28-9827-ece572f88b13.jpg",
+      "PackagePath": "staticwebassets\\images\\0ca9dc8c-1e07-4c28-9827-ece572f88b13.jpg"
+    },
+    {
       "Id": "F:\\ASP.NET_Blog\\Blog-Backend\\Blog-Backend\\wwwroot\\images\\Image2 (1).png",
       "PackagePath": "staticwebassets\\images\\Image2 (1).png"
     },
@@ -13,8 +17,16 @@
       "PackagePath": "staticwebassets\\images\\b0b8eca7-e9ef-4810-b41a-bdc392c0ee80.png"
     },
     {
+      "Id": "F:\\ASP.NET_Blog\\Blog-Backend\\Blog-Backend\\wwwroot\\images\\d376905a-37cd-42eb-bf36-1e2a44de072e.webp",
+      "PackagePath": "staticwebassets\\images\\d376905a-37cd-42eb-bf36-1e2a44de072e.webp"
+    },
+    {
       "Id": "F:\\ASP.NET_Blog\\Blog-Backend\\Blog-Backend\\wwwroot\\images\\ed79b542-4d1d-4ee8-bb4f-b31a510a3f72.png",
       "PackagePath": "staticwebassets\\images\\ed79b542-4d1d-4ee8-bb4f-b31a510a3f72.png"
+    },
+    {
+      "Id": "F:\\ASP.NET_Blog\\Blog-Backend\\Blog-Backend\\wwwroot\\images\\eea9808c-cc0c-4ee0-a3b7-a8efb5c635c1.jpg",
+      "PackagePath": "staticwebassets\\images\\eea9808c-cc0c-4ee0-a3b7-a8efb5c635c1.jpg"
     },
     {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.Blog-Backend.Microsoft.AspNetCore.StaticWebAssets.props",

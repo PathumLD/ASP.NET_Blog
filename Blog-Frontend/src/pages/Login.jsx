@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 // src/components/Login.js
 
 import { useState } from 'react';

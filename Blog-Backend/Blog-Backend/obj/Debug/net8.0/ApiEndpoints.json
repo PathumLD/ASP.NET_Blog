@@ -38,7 +38,23 @@
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "category",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "authorName",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "searchKeyword",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
     "ReturnTypes": [
       {
         "Type": "System.Collections.Generic.IEnumerable\u00601[[BlogDTO, Blog-Backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",

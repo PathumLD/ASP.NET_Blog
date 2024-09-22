@@ -23,17 +23,16 @@ const Layout = () => {
     <>
       <div className="flex flex-col h-[calc(100vh-24px)] bg-slate-100">
         {/* Navbar */}
-        <div className="fixed top-0 z-10  w-full  bg-white shadow-md">
+        <div className="fixed top-0 z-10  w-full  shadow-md">
           <ReaderNavbar />
         </div>
 
         {/* Main content area */}
-        <div className="h-full mt-16  overflow-auto">
+        <div className="h-screen mt-16  overflow-auto">
           <div className="container mx-auto w-full">
             <Outlet /> {/* Render child routes here */}
           </div>
         </div>
-        {/* <Footer /> Add footer if necessary */}
       </div>
     </>
   );
