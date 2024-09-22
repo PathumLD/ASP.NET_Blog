@@ -102,6 +102,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.UseStaticFiles(); // Enable serving static files
+
 
 var summaries = new[]
 {

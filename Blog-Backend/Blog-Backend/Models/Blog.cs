@@ -14,4 +14,7 @@ public class Blog
 
     // Navigation property
     public Reader Author { get; set; }
+
+    // New Image URL property
+    public string? ImageUrl { get; set; }
 }

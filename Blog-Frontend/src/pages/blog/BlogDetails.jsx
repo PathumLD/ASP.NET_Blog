@@ -19,7 +19,8 @@ const BlogDetail = () => {
         });
         setBlog(response.data); // Make sure author name is part of response.data
       } catch (err) {
-        setError('Failed to load blog details.', err);
+        setError('Failed to load blog details.'); // Fixed error handling
+        console.error(err); // Log the error for debugging
       } finally {
         setLoading(false);
       }
@@ -41,20 +42,33 @@ const BlogDetail = () => {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md mt-12 container mx-auto px-4 py-8">
-      <h1 className="text-4xl text-center font-bold mb-6">{blog.title}</h1>
-      <div className="text-gray-500 mb-4">
-        <p>Category: {blog.category}</p>
-        <p>Posted on: {new Date(blog.createdAt).toLocaleDateString()}</p>
-        {/* Display author's name */}
-        <p>Author: {blog.author}</p>
-      </div>
+    <div className="bg-white rounded-lg shadow-md mt-8 container mx-auto ">
+      {/* Render the cover image if available */}
+      {blog.imageUrl && (
+        <img
+          src={`https://localhost:7140${blog.imageUrl}`} // Ensure this URL is correct
+          alt={blog.title}
+          className="w-full h-80 object-cover rounded-t-lg mb-4"
+        />
+      )}
+      <div className='px-12 py-6'>
+        {/* Blog Title */}
+          <h1 className="text-4xl text-center font-bold mb-6">{blog.title}</h1>
 
-      {/* Render blog description with HTML */}
-      <div
-        className="text-gray-700 mb-6"
-        dangerouslySetInnerHTML={{ __html: blog.description }}
-      ></div>
+        {/* Blog Metadata */}
+        <div className="text-gray-500 mb-4 text-center">
+          <p>Category: {blog.category}</p>
+          <p>Posted on: {new Date(blog.createdAt).toLocaleDateString()}</p>
+          {/* Display author's name */}
+          <p>Author: {blog.author}</p>
+        </div>
+
+        {/* Blog Description */}
+        <div
+          className="text-gray-700 mb-6"
+          dangerouslySetInnerHTML={{ __html: blog.description }}
+        ></div>
+      </div>
     </div>
   );
 };

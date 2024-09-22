@@ -34,7 +34,8 @@ const Dashboard = () => {
           setBlogs(filteredBlogs);
         }
       } catch (err) {
-        setError('Failed to load blogs.', err);
+        setError('Failed to load blogs.'); // Fixed error handling
+        console.error(err); // Log error for debugging
       } finally {
         setLoading(false);
       }
@@ -57,17 +58,28 @@ const Dashboard = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {blogs.map((blog) => (
               <Link to={`/blog/${blog.blogId}`} key={blog.blogId}>
-                <div className="bg-white shadow-lg rounded-lg p-4 transition hover:shadow-xl cursor-pointer">
-                  <h2 className="text-xl font-bold mb-2">{blog.title}</h2>
-                  <p className="text-gray-700 mb-2">Category: {blog.category}</p>
-                  <div
-                    className="text-gray-700 mb-6 line-clamp-1"
-                    dangerouslySetInnerHTML={{ __html: blog.description }}
-                  ></div>
-                  <p className="text-sm text-gray-400">
-                    Posted on: {new Date(blog.createdAt).toLocaleDateString()}
-                  </p>
-                  <p className='text-sm text-gray-400'>Author: {blog.author}</p>
+                <div className="bg-white shadow-lg rounded-lg  transition hover:shadow-xl cursor-pointer">
+                  {/* Display cover image if available */}
+                  {blog.imageUrl && (
+                    <img
+                      src={`https://localhost:7140${blog.imageUrl}`} // Ensure this URL is correct
+                      alt={blog.title}
+                      className="w-full h-32 object-cover rounded-t-lg "
+                    />
+                  )}
+
+                  <div className='p-4'>
+                    <h2 className="text-xl font-bold mb-1">{blog.title}</h2>
+                    <p className="text-gray-700 mb-1">Category: {blog.category}</p>
+                    <div
+                      className="text-gray-700 mb-6 line-clamp-1"
+                      dangerouslySetInnerHTML={{ __html: blog.description }}
+                    ></div>
+                    <p className="text-sm text-gray-400">
+                      Posted on: {new Date(blog.createdAt).toLocaleDateString()}
+                    </p>
+                    <p className="text-sm text-gray-400">Author: {blog.author}</p>
+                  </div>
                 </div>
               </Link>
             ))}

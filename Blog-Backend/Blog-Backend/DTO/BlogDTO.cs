@@ -7,4 +7,6 @@ public class BlogDTO
     public DateTime CreatedAt { get; set; }
     public int BlogStatus { get; set; }
     public string Author { get; set; }  // Author's name (first and last name combined)
+
+    public string? ImageUrl { get; set; }
 }

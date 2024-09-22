@@ -26,80 +26,87 @@ namespace Blog_Backend.Controllers
         }
 
         [HttpPost("createBlog")]
-        public async Task<ActionResult<Blog>> CreateBlog([FromBody] CreateBlogDTO createBlogDTO)
+        public async Task<IActionResult> CreateBlog([FromForm] CreateBlogDTO createBlogDTO, IFormFile? image)
         {
-            if (createBlogDTO == null)
-            {
-                return BadRequest("Invalid blog data.");
-            }
-
-            // Log all claims for debugging
-            foreach (var claim in User.Claims)
-            {
-                _logger.LogInformation($"Claim: {claim.Type} = {claim.Value}");
-            }
-
-            // Try to get the ReaderId from various possible claim types
-            var readerIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) 
-                ?? User.FindFirst("sub")  // "sub" is commonly used for user ID in JWTs
-                ?? User.FindFirst("ReaderId")  // custom claim we might have used
-                ?? User.Claims.FirstOrDefault(c => c.Type.Contains("nameidentifier", StringComparison.OrdinalIgnoreCase));
-            
-            Console.Write("Reader Id : ", readerIdClaim);
-
-            if (readerIdClaim == null)
-            {
-                _logger.LogWarning("Unable to find ReaderId in the token claims.");
-                return Unauthorized("Unable to identify the user.");
-            }
-
-            _logger.LogInformation($"Found ReaderId claim: {readerIdClaim.Type} = {readerIdClaim.Value}");
-
-            if (!int.TryParse(readerIdClaim.Value, out int readerId))
-            {
-                _logger.LogWarning($"Failed to parse ReaderId: {readerIdClaim.Value}");
-                return BadRequest("Invalid user identification.");
-            }
-
-            // Check if the reader exists
-            var reader = await _context.Readers.FindAsync(readerId);
-            if (reader == null)
-            {
-                _logger.LogWarning($"Reader not found for ID: {readerId}");
-                return NotFound("Reader not found.");
-            }
-
-            var newBlog = new Blog
-            {
-                Title = createBlogDTO.Title,
-                Category = createBlogDTO.Category,
-                Description = createBlogDTO.Description,
-                CreatedAt = DateTime.UtcNow,
-                ReaderId = readerId
-            };
-
             try
             {
+                if (createBlogDTO == null)
+                {
+                    return BadRequest("Invalid blog data.");
+                }
+
+                var readerIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+                if (readerIdClaim == null || !int.TryParse(readerIdClaim.Value, out int readerId))
+                {
+                    return Unauthorized("Unable to identify the user.");
+                }
+
+                var reader = await _context.Readers.FindAsync(readerId);
+                if (reader == null)
+                {
+                    return NotFound("Reader not found.");
+                }
+
+                string imageUrl = null;
+                if (image != null && image.Length > 0)
+                {
+                    try
+                    {
+                        var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+                        if (!Directory.Exists(uploads))
+                        {
+                            Directory.CreateDirectory(uploads);
+                        }
+
+                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+                        var filePath = Path.Combine(uploads, fileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await image.CopyToAsync(stream);
+                        }
+
+                        imageUrl = $"/images/{fileName}";
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Error occurred while saving the image.");
+                        return StatusCode(500, "An error occurred while uploading the image.");
+                    }
+                }
+
+                var newBlog = new Blog
+                {
+                    Title = createBlogDTO.Title,
+                    Category = createBlogDTO.Category,
+                    Description = createBlogDTO.Description,
+                    CreatedAt = DateTime.UtcNow,
+                    ReaderId = readerId,
+                    ImageUrl = imageUrl
+                };
+
                 _context.Blogs.Add(newBlog);
                 await _context.SaveChangesAsync();
-                _logger.LogInformation($"Created new blog with ID: {newBlog.BlogId} for reader: {readerId}");
+
                 return CreatedAtAction(nameof(GetBlog), new { id = newBlog.BlogId }, newBlog);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while creating blog");
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                _logger.LogError(ex, "Error occurred while creating blog.");
+                return StatusCode(500, "An error occurred while processing your request.");
             }
         }
-        
-        
+
+
+
+
         // Get All Blogs
         [HttpGet("allBlogs")]
-        [AllowAnonymous] // No need for authorization
+        [AllowAnonymous] // No need for authorization to view all blogs
         public async Task<ActionResult<IEnumerable<BlogDTO>>> GetAllBlogs()
         {
             var blogs = await _context.Blogs
-                .Include<Blog, object>(b => b.Author)  // Include the related Reader to get the author's details
+                .Include(b => b.Author)  // Include the related Reader to get the author's details
                 .ToListAsync();
 
             if (blogs == null || !blogs.Any())
@@ -107,7 +114,7 @@ namespace Blog_Backend.Controllers
                 return NotFound("No blogs found.");
             }
 
-            // Map blogs to BlogDTOs including the author's name
+            // Map blogs to BlogDTOs, including the author's name and image URL
             var blogDTOs = blogs.Select(blog => new BlogDTO
             {
                 BlogId = blog.BlogId,
@@ -116,21 +123,21 @@ namespace Blog_Backend.Controllers
                 Description = blog.Description,
                 CreatedAt = blog.CreatedAt,
                 BlogStatus = blog.BlogStatus,
-                Author = $"{blog.Author.FirstName} {blog.Author.LastName}"  // Combine first and last name for the author
+                Author = $"{blog.Author.FirstName} {blog.Author.LastName}",  // Combine first and last name for the author
+                ImageUrl = blog.ImageUrl  // Add image URL to the response
             }).ToList();
 
             return Ok(blogDTOs);
         }
 
 
-        // View a blog
+        // View a specific blog
         [HttpGet("viewBlog/{id}")]
-        [AllowAnonymous] // No need for authorization
+        [AllowAnonymous] // No need for authorization to view a blog
         public async Task<ActionResult<BlogDTO>> GetBlog(int id)
         {
             var blog = await _context.Blogs
-                .Include<Blog, object>(b => b.Author)// Include the related Reader
-                .Where(b => b.BlogId == id)
+                .Include(b => b.Author)  // Include the related Reader (Author)
                 .FirstOrDefaultAsync(b => b.BlogId == id);
 
             if (blog == null)
@@ -138,7 +145,7 @@ namespace Blog_Backend.Controllers
                 return NotFound();
             }
 
-            // Return a BlogDTO that includes the blog details and the author's name
+            // Return a BlogDTO that includes the blog details, the author's name, and the image URL
             var blogDTO = new BlogDTO
             {
                 BlogId = blog.BlogId,
@@ -146,13 +153,14 @@ namespace Blog_Backend.Controllers
                 Category = blog.Category,
                 Description = blog.Description,
                 CreatedAt = blog.CreatedAt,
-                Author = $"{blog.Author.FirstName} {blog.Author.LastName}"  // Combine first and last name for the author
+                Author = $"{blog.Author.FirstName} {blog.Author.LastName}",  // Combine first and last name for the author
+                ImageUrl = blog.ImageUrl  // Include the image URL
             };
 
             return Ok(blogDTO);
         }
-        
-        
+
+
         //Update Blog
         [HttpPut("updateBlog/{id}")]
         public async Task<IActionResult> UpdateBlog(int id, [FromBody] UpdateBlogDTO updateBlogDTO)
@@ -265,7 +273,7 @@ namespace Blog_Backend.Controllers
             }
 
             // Update the blog status to "deleted" (0)
-            blog.BlogStatus = 1; // Assuming blogStatus is 1 for active and 0 for deleted
+            blog.BlogStatus = 0; // Assuming blogStatus is 1 for active and 0 for deleted
 
             try
             {
@@ -309,7 +317,8 @@ namespace Blog_Backend.Controllers
                 Description = blog.Description,
                 CreatedAt = blog.CreatedAt,
                 BlogStatus = blog.BlogStatus,
-                Author = $"{blog.Author.FirstName} {blog.Author.LastName}"
+                Author = $"{blog.Author.FirstName} {blog.Author.LastName}",
+                ImageUrl = blog.ImageUrl
             }).ToList();
 
             return Ok(blogDTOs);

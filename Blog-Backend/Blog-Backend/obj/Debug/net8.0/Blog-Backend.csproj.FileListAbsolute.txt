@@ -446,3 +446,4 @@ F:\ASP.NET_Blog\Blog-Backend\Blog-Backend\obj\Debug\net8.0\refint\Blog-Backend.d
 F:\ASP.NET_Blog\Blog-Backend\Blog-Backend\obj\Debug\net8.0\Blog-Backend.pdb
 F:\ASP.NET_Blog\Blog-Backend\Blog-Backend\obj\Debug\net8.0\Blog-Backend.genruntimeconfig.cache
 F:\ASP.NET_Blog\Blog-Backend\Blog-Backend\obj\Debug\net8.0\ref\Blog-Backend.dll
+F:\ASP.NET_Blog\Blog-Backend\Blog-Backend\bin\Debug\net8.0\Blog-Backend.staticwebassets.runtime.json

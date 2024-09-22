@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const ReaderNavbar = () => {
 
@@ -49,6 +49,11 @@ const ReaderNavbar = () => {
                 >
                     My Blogs
                 </button>
+                <div className="text-center ">
+                    <Link to="/blogs/create" className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
+                        New Blog
+                    </Link>
+                </div>
                 <button 
                     className="hover:underline" 
                     onClick={handleLogout}

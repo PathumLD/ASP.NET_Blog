@@ -1,0 +1,33 @@
+{
+  "Files": [
+    {
+      "Id": "F:\\ASP.NET_Blog\\Blog-Backend\\Blog-Backend\\wwwroot\\images\\Image2 (1).png",
+      "PackagePath": "staticwebassets\\images\\Image2 (1).png"
+    },
+    {
+      "Id": "F:\\ASP.NET_Blog\\Blog-Backend\\Blog-Backend\\wwwroot\\images\\b0b8eca7-e9ef-4810-b41a-bdc392c0ee80.png",
+      "PackagePath": "staticwebassets\\images\\b0b8eca7-e9ef-4810-b41a-bdc392c0ee80.png"
+    },
+    {
+      "Id": "F:\\ASP.NET_Blog\\Blog-Backend\\Blog-Backend\\wwwroot\\images\\ed79b542-4d1d-4ee8-bb4f-b31a510a3f72.png",
+      "PackagePath": "staticwebassets\\images\\ed79b542-4d1d-4ee8-bb4f-b31a510a3f72.png"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.Blog-Backend.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.Blog-Backend.props",
+      "PackagePath": "build\\Blog-Backend.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.Blog-Backend.props",
+      "PackagePath": "buildMultiTargeting\\Blog-Backend.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.Blog-Backend.props",
+      "PackagePath": "buildTransitive\\Blog-Backend.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
