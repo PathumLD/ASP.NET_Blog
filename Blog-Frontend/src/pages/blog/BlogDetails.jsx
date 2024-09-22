@@ -57,15 +57,15 @@ const BlogDetail = () => {
 
         {/* Blog Metadata */}
         <div className="text-gray-500 mb-4 text-center">
-          <p>Category: {blog.category}</p>
-          <p>Posted on: {new Date(blog.createdAt).toLocaleDateString()}</p>
+          <p >Category: <span className='text-stone-700 font-bold'>{blog.category}</span></p>
+          <p >Posted on: <span className='text-stone-700 font-bold'>{new Date(blog.createdAt).toLocaleDateString()}</span></p>
           {/* Display author's name */}
-          <p>Author: {blog.author}</p>
+          <p>Written by <span className='text-stone-700 font-bold'>{blog.author}</span></p>
         </div>
 
         {/* Blog Description */}
         <div
-          className="text-gray-700 mb-6"
+          className="max-w-3xl mx-auto text-gray-700 mb-6 text-justify"
           dangerouslySetInnerHTML={{ __html: blog.description }}
         ></div>
       </div>

@@ -161,9 +161,10 @@ namespace Blog_Backend.Controllers
         }
 
 
+
         //Update Blog
         [HttpPut("updateBlog/{id}")]
-        public async Task<IActionResult> UpdateBlog(int id, [FromBody] UpdateBlogDTO updateBlogDTO)
+        public async Task<IActionResult> UpdateBlog(int id, [FromForm] UpdateBlogDTO updateBlogDTO)
         {
             if (updateBlogDTO == null)
             {
@@ -184,8 +185,8 @@ namespace Blog_Backend.Controllers
             }
 
             // Get the current user's ReaderId from claims
-            var readerIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) 
-                ?? User.FindFirst("sub") 
+            var readerIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)
+                ?? User.FindFirst("sub")
                 ?? User.FindFirst("ReaderId")
                 ?? User.Claims.FirstOrDefault(c => c.Type.Contains("nameidentifier", StringComparison.OrdinalIgnoreCase));
 
@@ -214,7 +215,19 @@ namespace Blog_Backend.Controllers
             blog.Title = updateBlogDTO.Title;
             blog.Category = updateBlogDTO.Category;
             blog.Description = updateBlogDTO.Description;
-            
+
+            // Handle the image upload
+            if (updateBlogDTO.Image != null)
+            {
+                // Logic to save the image, e.g., to a file system or cloud storage
+                var imagePath = Path.Combine("wwwroot/images", updateBlogDTO.Image.FileName);
+                using (var stream = new FileStream(imagePath, FileMode.Create))
+                {
+                    await updateBlogDTO.Image.CopyToAsync(stream);
+                }
+                blog.ImageUrl = $"/images/{updateBlogDTO.Image.FileName}";
+            }
+
             // Save changes
             try
             {
@@ -229,8 +242,9 @@ namespace Blog_Backend.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-        
-        
+
+
+
         //Delete Blog
         [HttpPut("deleteBlog/{id}")]
         public async Task<IActionResult> DeleteBlog(int id)

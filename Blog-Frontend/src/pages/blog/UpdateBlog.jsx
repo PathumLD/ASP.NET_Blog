@@ -1,189 +1,171 @@
-import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css'; // Import styles for the editor
+import 'react-quill/dist/quill.snow.css';
 
 const UpdateBlog = () => {
-  const { blogId } = useParams();
-  const [blog, setBlog] = useState({ title: '', category: '', description: '', blogStatus: 1 }); // Added blogStatus to state
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false); // For modal state
-  const navigate = useNavigate();
+    const { blogId } = useParams();
+    const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchBlog = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get(`https://localhost:7140/api/Blog/viewBlog/${blogId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setBlog(response.data); // This includes blogStatus
-      } catch (err) {
-        setError('Failed to load blog details.', err);
-      } finally {
-        setLoading(false);
-      }
+    const [blog, setBlog] = useState({
+        title: '',
+        category: '',
+        description: '',
+        blogStatus: 1,
+        image: null, // Image state
+    });
+
+    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(false);
+
+    // Fetch the blog details when the component loads
+    useEffect(() => {
+        const fetchBlog = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`https://localhost:7140/api/Blog/viewBlog/${blogId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                const blogData = response.data;
+                setBlog({
+                    title: blogData.title,
+                    category: blogData.category,
+                    description: blogData.description,
+                    blogStatus: blogData.blogStatus,
+                    image: null, // Keep image initially empty
+                });
+            } catch (err) {
+                console.error('Error fetching blog:', err.response?.data || err.message);
+                setError('Error fetching blog data.');
+            }
+        };
+
+        fetchBlog();
+    }, [blogId]);
+
+    // Handle text field changes
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setBlog((prevBlog) => ({ ...prevBlog, [name]: value }));
     };
 
-    fetchBlog();
-  }, [blogId]);
+    // Handle ReactQuill change (for description)
+    const handleDescriptionChange = (value) => {
+        setBlog((prevBlog) => ({ ...prevBlog, description: value }));
+    };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setBlog((prevBlog) => ({ ...prevBlog, [name]: value }));
+    // Handle file input changes
+    const handleFileChange = (e) => {
+        setBlog((prevBlog) => ({ ...prevBlog, image: e.target.files[0] }));
+    };
+
+    // Handle form submission
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      setError(null);
+      setSuccess(false);
+  
+      try {
+          const token = localStorage.getItem('token');
+          const formData = new FormData();
+          formData.append('title', blog.title);
+          formData.append('category', blog.category);
+          formData.append('description', blog.description);
+          formData.append('blogStatus', blog.blogStatus);
+  
+          // Only append the image if a new one is selected
+          if (blog.image) {
+              formData.append('image', blog.image);
+          }
+  
+          // Send PUT request to update the blog
+          await axios.put(`https://localhost:7140/api/Blog/updateBlog/${blogId}`, formData, {
+              headers: {
+                  Authorization: `Bearer ${token}`,
+                  'Content-Type': 'multipart/form-data',
+              },
+          });
+  
+          setSuccess(true);
+          navigate(`/blogs`); // Redirect after successful update
+      } catch (err) {
+          console.error('Failed to update the blog:', err.response?.data || err.message);
+          // Log the validation errors
+          if (err.response && err.response.data && err.response.data.errors) {
+              console.error('Validation errors:', err.response.data.errors);
+          }
+          setError('Failed to update the blog.');
+      }
   };
+  
+  
 
-  const handleQuillChange = (value) => {
-    setBlog((prevBlog) => ({ ...prevBlog, description: value }));
-  };
+    return (
+        <div className="container mx-auto px-4">
+            <h1 className="text-2xl font-bold mb-4">Update Blog</h1>
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError(null);
-    setSuccess(false);
+            {error && <div className="text-red-600 mb-4">{error}</div>}
+            {success && <div className="text-green-600 mb-4">Blog updated successfully!</div>}
 
-    try {
-      const token = localStorage.getItem('token');
-      await axios.put(`https://localhost:7140/api/Blog/updateBlog/${blogId}`, blog, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setSuccess(true);
-      navigate(`/blogs`);
-    } catch (err) {
-      setError('Failed to update the blog.', err);
-    }
-  };
+            <form onSubmit={handleSubmit}>
+                <div className="mb-4">
+                    <label className="block text-gray-700">Title</label>
+                    <input
+                        type="text"
+                        name="title"
+                        value={blog.title}
+                        onChange={handleChange}
+                        className="w-full p-2 border border-gray-300 rounded"
+                        required
+                    />
+                </div>
 
-  const handleDelete = async () => {
-    setError(null);
-    setSuccess(false);
+                <div className="mb-4">
+                    <label className="block text-gray-700">Category</label>
+                    <input
+                        type="text"
+                        name="category"
+                        value={blog.category}
+                        onChange={handleChange}
+                        className="w-full p-2 border border-gray-300 rounded"
+                        required
+                    />
+                </div>
 
-    try {
-      const token = localStorage.getItem('token');
-      await axios.put(`https://localhost:7140/api/Blog/deleteBlog/${blogId}`, {}, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setSuccess(true);
-      alert("Blog deleted successfully!");
-      navigate('/blogs'); // Redirect to the list of blogs
-    } catch (err) {
-      setError('Failed to delete the blog.', err);
-    }
-  };
+                <div className="mb-4">
+                    <label className="block text-gray-700">Description</label>
+                    <ReactQuill
+                        value={blog.description}
+                        onChange={handleDescriptionChange}
+                        theme="snow"
+                        className="w-full p-2 border border-gray-300 rounded"
+                    />
+                </div>
 
-  const handleRepost = async () => {
-    setError(null);
-    setSuccess(false);
+                <div className="mb-4">
+                    <label className="block text-gray-700">Image (optional)</label>
+                    <input
+                        type="file"
+                        name="image"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        className="w-full p-2 border border-gray-300 rounded"
+                    />
+                </div>
 
-    try {
-      const token = localStorage.getItem('token');
-      // Update blogStatus to 1
-      await axios.put(`https://localhost:7140/api/Blog/updateBlog/${blogId}`, { ...blog, blogStatus: 1 }, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setSuccess(true);
-      alert("Blog reposted successfully!");
-      navigate('/blogs');
-    } catch (err) {
-      setError('Failed to repost the blog.', err);
-    }
-  };
-
-  const openModal = (e) => {
-    e.preventDefault(); // Prevent form submission
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => setIsModalOpen(false);
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div className="text-red-500">{error}</div>;
-
-  return (
-    <div className="bg-white rounded-lg shadow-md mt-12 container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-center mb-6">Update Blog</h1>
-      {success && <div className="text-green-500">Blog updated successfully!</div>}
-      <form onSubmit={handleSubmit}>
-        {error && <div className="text-red-500 mt-4">{error}</div>}
-        <div className="mb-4">
-          <label className="block text-gray-700">Title</label>
-          <input
-            type="text"
-            name="title"
-            value={blog.title}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded"
-            required
-          />
+                <button
+                    type="submit"
+                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                >
+                    Update Blog
+                </button>
+            </form>
         </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Category</label>
-          <input
-            type="text"
-            name="category"
-            value={blog.category}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Description</label>
-          <ReactQuill
-            value={blog.description}
-            onChange={handleQuillChange}
-            theme="snow"
-            className="h-64"
-            required
-          />
-        </div>
-        <div className="flex justify-between">
-          {blog.blogStatus === 0 ? (
-            <button onClick={openModal} className="bg-red-500 text-white py-2 px-4 mt-16 rounded hover:bg-red-600">
-              Delete Blog
-            </button>
-          ) : (
-            <button onClick={handleRepost} className="bg-green-500 text-white py-2 px-4 mt-16 rounded hover:bg-green-600">
-              Repost Blog
-            </button>
-          )}
-          <button type="submit" className="bg-blue-500 text-white py-2 px-4 mt-16 rounded hover:bg-blue-600">
-            Update Blog
-          </button>
-        </div>
-      </form>
-      
-      {/* Confirmation Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-            <h2 className="text-xl font-semibold mb-4">Confirm Delete</h2>
-            <p className="mb-6">Are you sure you want to delete this blog?</p>
-            <div className="flex justify-end space-x-4">
-              <button
-                onClick={closeModal}
-                className="bg-gray-300 text-gray-700 py-2 px-4 rounded"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => {
-                  handleDelete();
-                  closeModal();
-                }}
-                className="bg-red-500 text-white py-2 px-4 rounded"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+    );
 };
 
 export default UpdateBlog;

@@ -50,13 +50,6 @@ const MyBlogs = () => {
         )}
       </div>
 
-      {/* Always Show Add New Blog Button */}
-      {/* <div className="text-center mb-6">
-        <Link to="/blogs/create" className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
-          New Blog
-        </Link>
-      </div> */}
-
       {blogs.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {blogs.map((blog) => (

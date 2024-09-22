@@ -25,12 +25,12 @@ const Dashboard = () => {
           });
           
           // Log the entire response to check the data format
-          console.log("API Response: ", response.data);
+          // console.log("API Response: ", response.data);
 
           // Ensure blogStatus exists in the response and filter blogs with BlogStatus == 1
           const filteredBlogs = response.data.filter(blog => blog.blogStatus === 1);
 
-          console.log("Filtered Blogs: ", filteredBlogs);  // Log filtered blogs
+          // console.log("Filtered Blogs: ", filteredBlogs);  // Log filtered blogs
           setBlogs(filteredBlogs);
         }
       } catch (err) {
@@ -72,7 +72,7 @@ const Dashboard = () => {
                     <h2 className="text-xl font-bold mb-1">{blog.title}</h2>
                     <p className="text-gray-700 mb-1">Category: {blog.category}</p>
                     <div
-                      className="text-gray-700 mb-6 line-clamp-1"
+                      className="text-gray-700 mb-6 line-clamp-2"
                       dangerouslySetInnerHTML={{ __html: blog.description }}
                     ></div>
                     <p className="text-sm text-gray-400">

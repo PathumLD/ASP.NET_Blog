@@ -17,7 +17,7 @@ const LandingPage = () => {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
-      <h1 className="text-3xl font-bold mb-8">Welcome to Our Platform</h1>
+      <h1 className="text-3xl font-bold mb-8">Welcome to BlogMe</h1>
       <div className="space-x-4">
         <button onClick={handleRegister} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
           Register

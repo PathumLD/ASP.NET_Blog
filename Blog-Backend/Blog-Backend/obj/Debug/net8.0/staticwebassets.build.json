@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "k3Q+vlF/dHS6bC5c31NZNEEG5cLvSvxrUyXJUIXEkHo=",
+  "Hash": "NarT+nyLON0IEnV160nBym3d9C4mumsqxhq99LvbR3o=",
   "Source": "Blog-Backend",
   "BasePath": "_content/Blog-Backend",
   "Mode": "Default",
@@ -72,6 +72,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\Image2 (1).png"
+    },
+    {
+      "Identity": "F:\\ASP.NET_Blog\\Blog-Backend\\Blog-Backend\\wwwroot\\images\\Image4.png",
+      "SourceId": "Blog-Backend",
+      "SourceType": "Discovered",
+      "ContentRoot": "F:\\ASP.NET_Blog\\Blog-Backend\\Blog-Backend\\wwwroot\\",
+      "BasePath": "_content/Blog-Backend",
+      "RelativePath": "images/Image4.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\Image4.png"
     }
   ]
 }
