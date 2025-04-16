@@ -5353,11 +5353,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "F:\\ASP.NET_Blog\\Blog-Backend\\Blog-Backend\\Blog-Backend.csproj",
+      "projectUniqueName": "F:\\Development\\ASP.NET_Blog\\Blog-Backend\\Blog-Backend\\Blog-Backend.csproj",
       "projectName": "Blog-Backend",
-      "projectPath": "F:\\ASP.NET_Blog\\Blog-Backend\\Blog-Backend\\Blog-Backend.csproj",
+      "projectPath": "F:\\Development\\ASP.NET_Blog\\Blog-Backend\\Blog-Backend\\Blog-Backend.csproj",
       "packagesPath": "C:\\Users\\Roshelle\\.nuget\\packages\\",
-      "outputPath": "F:\\ASP.NET_Blog\\Blog-Backend\\Blog-Backend\\obj\\",
+      "outputPath": "F:\\Development\\ASP.NET_Blog\\Blog-Backend\\Blog-Backend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Roshelle\\AppData\\Roaming\\NuGet\\NuGet.Config",
