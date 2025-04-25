@@ -1,0 +1,6 @@
+services:
+  blog-backend:
+    image: ${DOCKER_REGISTRY-}blogbackend
+    build:
+      context: .
+      dockerfile: Blog-Backend\Dockerfile

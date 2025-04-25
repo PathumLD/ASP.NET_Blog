@@ -14,8 +14,8 @@ const ReaderNavbar = () => {
 
     const navItems = [
         { path: '/dashboard', icon: <FiHome className="w-5 h-5" />, label: 'Dashboard' },
-        { path: '/profile', icon: <FiUser className="w-5 h-5" />, label: 'Profile' },
         { path: '/blogs', icon: <FiBook className="w-5 h-5" />, label: 'My Blogs' },
+        { path: '/profile', icon: <FiUser className="w-5 h-5" />, label: 'Profile' },
         // { path: '/settings', icon: <FiSettings className="w-5 h-5" />, label: 'Settings' },
     ];
 
